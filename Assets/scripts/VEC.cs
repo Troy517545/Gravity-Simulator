@@ -10,5 +10,7 @@ class VEC {
     {
         Debug.Log("This is from VEC class");
         Debug.Log("Second test");
+        Debug.Log("Third test");
+
     }
 }
