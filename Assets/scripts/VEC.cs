@@ -8,6 +8,6 @@ class VEC {
     // Start is called before the first frame update
     public void printX()
     {
-        Debug.Log("From VEC class");
+        Debug.Log("This is from VEC class");
     }
 }
