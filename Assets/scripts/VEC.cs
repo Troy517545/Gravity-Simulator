@@ -130,7 +130,31 @@ public class VEC {
         return v;
     }
 
+    public double abs()
+    {
+        double s = 0;
+        for(int i = 0; i < dim; i++)
+        {
+            s += val[i] * val[i];
+        }
+        return Math.Sqrt(s);
+    }
 
+    public static VEC Normalize(VEC v)
+    {
+        int n = v.len();
+        VEC X = new VEC(n);
+        double abs = v.abs();
+        if (abs < 1E-10)
+        {
+            return X;
+        }
+        else
+        {
+            X = v / abs;
+            return X;
+        }
+    }
 
 
 
