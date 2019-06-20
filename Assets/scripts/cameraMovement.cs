@@ -9,11 +9,11 @@ public class cameraMovement : MonoBehaviour
     public float speedV = 3.0f;
 
 
-    public float walkSpeed = 1f;
+    public float walkSpeed = 0.5f;
 
 
-    private float yaw = 0.0f;
-    private float pitch = 0.0f;
+    private float yaw = -180.0f;
+    private float pitch = 2.4f;
 
     void Update()
     {
@@ -33,11 +33,11 @@ public class cameraMovement : MonoBehaviour
 
         if (Input.GetKey("w"))
         {
-            transform.position -= walkSpeed * (Vector3.Cross(Vector3.up, transform.right).normalized);
+            transform.position += walkSpeed * (transform.forward).normalized;
         }
         if (Input.GetKey("s"))
         {
-            transform.position += walkSpeed * (Vector3.Cross(Vector3.up, transform.right).normalized);
+            transform.position -= walkSpeed * (transform.forward).normalized;
         }
         if (Input.GetKey("a"))
         {
@@ -47,13 +47,13 @@ public class cameraMovement : MonoBehaviour
         {
             transform.position += walkSpeed * (transform.right).normalized;
         }
-        if (Input.GetKey("left ctrl"))
-        {
-            transform.position -= walkSpeed * (transform.up).normalized;
-        }
         if (Input.GetKey("left shift"))
         {
-            transform.position += walkSpeed * (transform.up).normalized;
+            transform.position -= walkSpeed * (Vector3.up).normalized;
+        }
+        if (Input.GetKey("space"))
+        {
+            transform.position += walkSpeed * (Vector3.up).normalized;
         }
     }
 }
