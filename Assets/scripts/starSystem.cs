@@ -128,7 +128,7 @@ public class starSystem
 
         double e_threshold = 1E-7;
         double err = 1.0 + e_threshold;
-        int maxIterNum = 200;
+        int maxIterNum = 100;
 
         while (err > e_threshold & maxIterNum > 0)
         {
