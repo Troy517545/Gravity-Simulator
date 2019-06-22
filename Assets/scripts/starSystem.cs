@@ -46,7 +46,7 @@ public class starSystem
         }
     }
 
-    public void destroyStar(Star a)
+    public void destroyStar(Star a, int validCondition)
     {
         int index = -1;
         bool flag = false;
@@ -57,7 +57,7 @@ public class starSystem
                 if(s[index] == a)
                 {
                     flag = true;
-                    s[index].valid = 0;
+                    s[index].valid = validCondition;
                     s[index] = new Star();
                     validMap[index] = false;
                     validCount--;
@@ -68,6 +68,17 @@ public class starSystem
         if (flag == false)
         {
             Debug.Log("ERROR! Cannot find star to destroy!");
+        }
+    }
+
+    public void clearAllStars(int validCondition)
+    {
+        for (int i = 0; i < maxStarNum; i++)
+        {
+            if(validMap[i] == true)
+            {
+                destroyStar(s[i], validCondition);
+            }
         }
     }
 
@@ -126,7 +137,7 @@ public class starSystem
             massAll[i] = s[validIndex[i]].mass;
         }
 
-        double e_threshold = 1E-7;
+        double e_threshold = 1E-9;
         double err = 1.0 + e_threshold;
         int maxIterNum = 100;
 
@@ -269,8 +280,7 @@ public class starSystem
             maxIterNum--;
             if (maxIterNum == 0)
             {
-                Debug.Log("Max iter number reached");
-                Debug.Log(err);
+                Debug.Log("Max iter number reached. Err: " + err + "  Using Forward method instead in this period.");
                 updateForwardMethod(h / 2.0);
                 updateForwardMethod(h / 2.0);
                 return;
@@ -294,7 +304,7 @@ public class starSystem
                     s[validIndex[j]].pos += (s[validIndex[i]].pos - s[validIndex[j]].pos) * s[validIndex[i]].mass / (s[validIndex[j]].mass + s[validIndex[i]].mass);
                     s[validIndex[j]].vel = (s[validIndex[j]].vel * s[validIndex[j]].mass + s[validIndex[i]].vel * s[validIndex[i]].mass) / (s[validIndex[j]].mass + s[validIndex[i]].mass);
                     s[validIndex[j]].mass += s[validIndex[i]].mass;
-                    destroyStar(s[validIndex[i]]);
+                    destroyStar(s[validIndex[i]], 0);
                     continue;
                 }
             }
@@ -489,7 +499,7 @@ public class starSystem
             maxIterNum--;
             if (maxIterNum == 0)
             {
-                Debug.Log("Max iter number reached");
+                Debug.Log("Max iter number reached. Err: " + err + "  Using Forward method instead in this period.");
                 Debug.Log(err);
                 updateForwardMethod(h / 2.0);
                 updateForwardMethod(h / 2.0);
@@ -514,7 +524,7 @@ public class starSystem
                     s[validIndex[j]].pos += (s[validIndex[i]].pos - s[validIndex[j]].pos) * s[validIndex[i]].mass / (s[validIndex[j]].mass + s[validIndex[i]].mass);
                     s[validIndex[j]].vel = (s[validIndex[j]].vel * s[validIndex[j]].mass + s[validIndex[i]].vel * s[validIndex[i]].mass) / (s[validIndex[j]].mass + s[validIndex[i]].mass);
                     s[validIndex[j]].mass += s[validIndex[i]].mass;
-                    destroyStar(s[validIndex[i]]);
+                    destroyStar(s[validIndex[i]], 0);
                     continue;
                 }
             }
@@ -574,7 +584,7 @@ public class starSystem
                     s[validIndex[j]].pos += (s[validIndex[i]].pos - s[validIndex[j]].pos) * s[validIndex[i]].mass / (s[validIndex[j]].mass + s[validIndex[i]].mass);
                     s[validIndex[j]].vel = (s[validIndex[j]].vel * s[validIndex[j]].mass + s[validIndex[i]].vel * s[validIndex[i]].mass) / (s[validIndex[j]].mass + s[validIndex[i]].mass);
                     s[validIndex[j]].mass += s[validIndex[i]].mass;
-                    destroyStar(s[validIndex[i]]);
+                    destroyStar(s[validIndex[i]], 0);
                     continue;
                 }
             }

@@ -7,16 +7,24 @@ public class cameraMovement : MonoBehaviour
 {
     private bool cameraRotationLock = false;
     private bool cameraMovementLock = false;
+    private bool slowWalkCondition = false;
+    private float nowWalkSpeed;
 
     public float speedH = 3.0f;
     public float speedV = 3.0f;
     
 
-    public float walkSpeed = 0.5f;
+    public float normalWalkSpeed = 0.5f;
+    public float slowWalkSpeed = 0.2f;
 
 
     private float yaw = -180.0f;
     private float pitch = 2.4f;
+
+    void Start()
+    {
+        nowWalkSpeed = normalWalkSpeed;
+    }
 
     void Update()
     {
@@ -46,27 +54,49 @@ public class cameraMovement : MonoBehaviour
         {
             if (Input.GetKey("w"))
             {
-                transform.position += walkSpeed * (transform.forward).normalized;
+                transform.position += nowWalkSpeed * (transform.forward).normalized;
             }
             if (Input.GetKey("s"))
             {
-                transform.position -= walkSpeed * (transform.forward).normalized;
+                transform.position -= nowWalkSpeed * (transform.forward).normalized;
             }
             if (Input.GetKey("a"))
             {
-                transform.position -= walkSpeed * (transform.right).normalized;
+                transform.position -= nowWalkSpeed * (transform.right).normalized;
             }
             if (Input.GetKey("d"))
             {
-                transform.position += walkSpeed * (transform.right).normalized;
+                transform.position += nowWalkSpeed * (transform.right).normalized;
             }
             if (Input.GetKey("left shift"))
             {
-                transform.position -= walkSpeed * (Vector3.up).normalized;
+                transform.position -= nowWalkSpeed * (Vector3.up).normalized;
             }
             if (Input.GetKey("space"))
             {
-                transform.position += walkSpeed * (Vector3.up).normalized;
+                transform.position += nowWalkSpeed * (Vector3.up).normalized;
+            }
+            //if(Input.GetKeyDown("left alt"))
+            //{
+            //    slowWalkCondition = true;
+            //    nowWalkSpeed = slowWalkSpeed;
+            //}
+            //if (Input.GetKeyUp("left alt"))
+            //{
+            //    slowWalkCondition = false;
+            //    nowWalkSpeed = normalWalkSpeed;
+            //}
+            if (Input.GetKeyDown("c"))
+            {
+                slowWalkCondition = (slowWalkCondition == true) ? false : true;
+                if(slowWalkCondition == true)
+                {
+                    nowWalkSpeed = slowWalkSpeed;
+                }
+                else
+                {
+                    nowWalkSpeed = normalWalkSpeed;
+                }
             }
         }
     }

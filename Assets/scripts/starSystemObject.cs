@@ -51,7 +51,7 @@ public class starSystemObject : MonoBehaviour
     {
         while (true)
         {
-            system.update(0.3);
+            system.update(0.1);
             await Task.Delay(1);
         }
     }
@@ -114,6 +114,10 @@ public class starSystemObject : MonoBehaviour
             
         }
 
+        if (GUILayout.Button("Clear all stars"))
+        {
+            system.clearAllStars(-1);
+        }
     }
 
 }

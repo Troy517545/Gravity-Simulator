@@ -26,19 +26,31 @@ public class starObject : MonoBehaviour
         starSystemScript = GameObject.Find("starSystemObject").GetComponent<starSystemObject>();
         s = new Star(transform.position[0], transform.position[1], transform.position[2], vel[0], vel[1], vel[2], mass);
         starSystemScript.addStarToSystem(s);
+
         lineRenderer = GetComponent<LineRenderer>();
         lineRenderer.widthMultiplier = 0.1f;
-        lineRenderer.startColor = lineRendererColor;
-        lineRenderer.endColor = Color.white;
-
         lineRenderer.positionCount = nowLineRendererIndex;
+        
+        Gradient gradient = new Gradient();
+        gradient.SetKeys(
+            new GradientColorKey[] { new GradientColorKey(lineRendererColor, 0.0f), new GradientColorKey(Color.Lerp(lineRendererColor, Color.white, 0.5f), 0.9f), new GradientColorKey(Color.white, 1.0f) },
+            new GradientAlphaKey[] { new GradientAlphaKey(lineRendererColor.a, 0.0f), new GradientAlphaKey(lineRendererColor.a, 1.0f) }
+        );
+        lineRenderer.colorGradient = gradient;
+
+        //new GradientColorKey(Color.Lerp(lineRendererColor, Color.white, 0.5f), 0.9f)
+
 
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (s.valid == 0)
+        if(s.valid == -1)
+        {
+            Destroy(gameObject);
+        }
+        else if (s.valid == 0)
         {
             var track = Instantiate(trackObjectPrefab);
             LineRenderer trackLineRenderer = track.GetComponent<LineRenderer>();
@@ -48,11 +60,16 @@ public class starObject : MonoBehaviour
 
             trackLineRenderer.positionCount = lineRenderer.positionCount;
 
+            Vector3[] positions = new Vector3[lineRenderer.positionCount];
+            lineRenderer.GetPositions(positions);
+            trackLineRenderer.SetPositions(positions);
 
-            for (int i=0;i< lineRenderer.positionCount; i++)
-            {
-                trackLineRenderer.SetPosition(i, lineRenderer.GetPosition(i));
-            }
+            Gradient gradient = new Gradient();
+            gradient.SetKeys(
+                new GradientColorKey[] { new GradientColorKey(lineRendererColor, 0.0f), new GradientColorKey(Color.Lerp(lineRendererColor, Color.white, 0.5f), 0.9f), new GradientColorKey(Color.white, 1.0f) },
+                new GradientAlphaKey[] { new GradientAlphaKey(lineRendererColor.a, 0.0f), new GradientAlphaKey(lineRendererColor.a, 1.0f) }
+            );
+            trackLineRenderer.colorGradient = gradient;
 
             Destroy(gameObject);
         }
