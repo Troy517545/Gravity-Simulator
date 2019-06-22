@@ -10,11 +10,11 @@ public class starObject : MonoBehaviour
     public int maxLengthOfLineRenderer = 400;
     private int nowLineRendererIndex = 0;
     public Color lineRendererColor;
-    public double mass = 2E9;
+    public double mass = 1E9;
     public GameObject trackObjectPrefab;
 
 
-    public VEC vol = new VEC(3);
+    public VEC vel = new VEC(3);
     void Awake()
     {
         
@@ -24,7 +24,7 @@ public class starObject : MonoBehaviour
     void Start()
     {
         starSystemScript = GameObject.Find("starSystemObject").GetComponent<starSystemObject>();
-        s = new Star(transform.position[0], transform.position[1], transform.position[2], vol[0], vol[1], vol[2], mass);
+        s = new Star(transform.position[0], transform.position[1], transform.position[2], vel[0], vel[1], vel[2], mass);
         starSystemScript.addStarToSystem(s);
         lineRenderer = GetComponent<LineRenderer>();
         lineRenderer.widthMultiplier = 0.1f;

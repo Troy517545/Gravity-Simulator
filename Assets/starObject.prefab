@@ -107,7 +107,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxLengthOfLineRenderer: 400
   lineRendererColor: {r: 0, g: 0, b: 0, a: 0}
-  mass: 2000000000
+  mass: 1000000000
   trackObjectPrefab: {fileID: 5926353489502875903, guid: 8ac2e2151383cb54cb8585e9340143cd,
     type: 3}
 --- !u!120 &8248175765220608119
