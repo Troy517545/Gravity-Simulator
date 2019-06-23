@@ -105,13 +105,13 @@ public class starSystem
         }
     }
 
+
     /*
      * void updateTrapezoidalMethod(double h)
      * 
      * Trapezoidal method on velocity 
      * Trapezoidal method on position
      */
-
     public void updateTrapezoidalMethod(double h)
     {
         if (validCount <= 0)
