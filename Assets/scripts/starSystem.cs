@@ -13,6 +13,8 @@ public class starSystem
     private double minDistanceToDistroy = 7E-1;
     private bool systemRunning = true;
 
+    public int numOfForwardMethodInstead = 10;
+
     public starSystem()
     {
         validMap = new bool[maxStarNum];
@@ -294,8 +296,10 @@ public class starSystem
             if (maxIterNum == 0)
             {
                 Debug.Log("Max iter number reached. Err: " + err + "  Using Forward method instead in this period.");
-                updateForwardMethod(h / 2.0);
-                updateForwardMethod(h / 2.0);
+                for(int i = 0; i < numOfForwardMethodInstead; i++)
+                {
+                    updateForwardMethod(h / numOfForwardMethodInstead);
+                }
                 return;
             }
         }

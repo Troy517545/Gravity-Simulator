@@ -10,7 +10,7 @@ public class cameraMovement : MonoBehaviour
 
     public bool escMenuActiveStatus = false;
 
-    private bool cameraRotationLock = false;
+    public bool cameraRotationLock = false;
     private bool cameraMovementLock = false;
     private bool slowWalkCondition = false;
 

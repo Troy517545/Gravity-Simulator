@@ -8,16 +8,27 @@ public class GUILayoutObject : MonoBehaviour
     starSystemObject starSystemScript;
     cameraMovement cameraMovementScript;
 
-    public string newStarX = "-40.0";
-    public string newStarY = "0.0";
-    public string newStarZ = "0.0";
-    public string newStarVx = "0.0";
-    public string newStarVy = "-0.1";
-    public string newStarVz = "0.0";
-    public string newStarMass = "1E9";
+    public string newStarXStr = "-40.0";
+    public string newStarYStr = "0.0";
+    public string newStarZStr = "0.0";
+    public string newStarVxStr = "0.0";
+    public string newStarVyStr = "-0.1";
+    public string newStarVzStr = "0.0";
+    public string newStarMassStr = "1E9";
+
+    private float  newStarX;
+    private float newStarY;
+    private float newStarZ;
+    private float newStarVx;
+    private float newStarVy;
+    private float newStarVz;
+    private float newStarMass;
+
     public string starInfoToDisplay = "";
 
     public bool displayStarInfo = false;
+
+    private bool haveInvalidInput = false;
 
     // Start is called before the first frame update
     void Start()
@@ -25,15 +36,25 @@ public class GUILayoutObject : MonoBehaviour
         starSystemScript = GameObject.Find("starSystemObject").GetComponent<starSystemObject>();
         cameraMovementScript = GameObject.Find("Main Camera").GetComponent<cameraMovement>();
 
-        newStarX = "0.0";
-        newStarY = "0.0";
-        newStarZ = "10.0";
-        newStarVx = "0.0";
-        newStarVy = "0.0";
-        newStarVz = "0.0";
-        newStarMass = "1E9";
+        newStarXStr = "0.0";
+        newStarYStr = "0.0";
+        newStarZStr = "10.0";
+        newStarVxStr = "0.0";
+        newStarVyStr = "0.0";
+        newStarVzStr = "0.0";
+        newStarMassStr = "1E9";
 
         displayStarInfo = false;
+
+        float.TryParse(newStarXStr, out newStarX);
+        float.TryParse(newStarYStr, out newStarY);
+        float.TryParse(newStarZStr, out newStarZ);
+        float.TryParse(newStarVxStr, out newStarVx);
+        float.TryParse(newStarVyStr, out newStarVy);
+        float.TryParse(newStarVzStr, out newStarVz);
+        float.TryParse(newStarMassStr, out newStarMass);
+
+
     }
 
     // Update is called once per frame
@@ -44,63 +65,72 @@ public class GUILayoutObject : MonoBehaviour
 
     void OnGUI()
     {
-        if(cameraMovementScript.escMenuActiveStatus == false)
+        if(cameraMovementScript.escMenuActiveStatus == false & cameraMovementScript.cameraRotationLock == true)
         {
+            haveInvalidInput = false;
             GUILayout.BeginHorizontal("box");
             GUILayout.Label("Pos x: ");
-            newStarX = GUILayout.TextField(newStarX, 25, GUILayout.Width(60));
+            newStarXStr = GUILayout.TextField(newStarXStr, 25, GUILayout.Width(60));
+            stringToFloatCheckAndAssign(ref newStarXStr, ref newStarX);
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal("box");
             GUILayout.Label("Pos y: ");
-            newStarY = GUILayout.TextField(newStarY, 25, GUILayout.Width(60));
+            newStarYStr = GUILayout.TextField(newStarYStr, 25, GUILayout.Width(60));
+            stringToFloatCheckAndAssign(ref newStarYStr, ref newStarY);
             GUILayout.EndHorizontal();
-
 
             GUILayout.BeginHorizontal("box");
             GUILayout.Label("Pos z: ");
-            newStarZ = GUILayout.TextField(newStarZ, 25, GUILayout.Width(60));
+            newStarZStr = GUILayout.TextField(newStarZStr, 25, GUILayout.Width(60));
+            stringToFloatCheckAndAssign(ref newStarZStr, ref newStarZ);
             GUILayout.EndHorizontal();
-
 
             GUILayout.BeginHorizontal("box");
             GUILayout.Label("V x: ");
-            newStarVx = GUILayout.TextField(newStarVx, 25, GUILayout.Width(60));
+            newStarVxStr = GUILayout.TextField(newStarVxStr, 25, GUILayout.Width(60));
+            stringToFloatCheckAndAssign(ref newStarVxStr, ref newStarVx);
             GUILayout.EndHorizontal();
-
 
             GUILayout.BeginHorizontal("box");
             GUILayout.Label("V y: ");
-            newStarVy = GUILayout.TextField(newStarVy, 25, GUILayout.Width(60));
+            newStarVyStr = GUILayout.TextField(newStarVyStr, 25, GUILayout.Width(60));
+            stringToFloatCheckAndAssign(ref newStarVyStr, ref newStarVy);
             GUILayout.EndHorizontal();
-
 
             GUILayout.BeginHorizontal("box");
             GUILayout.Label("V z: ");
-            newStarVz = GUILayout.TextField(newStarVz, 25, GUILayout.Width(60));
+            newStarVzStr = GUILayout.TextField(newStarVzStr, 25, GUILayout.Width(60));
+            stringToFloatCheckAndAssign(ref newStarVzStr, ref newStarVz);
             GUILayout.EndHorizontal();
-
 
             GUILayout.BeginHorizontal("box");
             GUILayout.Label("Mass: ");
-            newStarMass = GUILayout.TextField(newStarMass, 25, GUILayout.Width(60));
+            newStarMassStr = GUILayout.TextField(newStarMassStr, 25, GUILayout.Width(60));
+            stringToFloatCheckAndAssign(ref newStarMassStr, ref newStarMass);
             GUILayout.EndHorizontal();
 
-
+            if (haveInvalidInput == true)
+            {
+                GUI.enabled = false;
+            }
             if (GUILayout.Button("Add star"))
             {
-                var newStar = Instantiate(myPrefab, new Vector3(float.Parse(newStarX, System.Globalization.NumberStyles.Float),
-                                                                float.Parse(newStarY, System.Globalization.NumberStyles.Float),
-                                                                float.Parse(newStarZ, System.Globalization.NumberStyles.Float)), Quaternion.identity);
+                var newStar = Instantiate(myPrefab, new Vector3(float.Parse(newStarXStr, System.Globalization.NumberStyles.Float),
+                                                                float.Parse(newStarYStr, System.Globalization.NumberStyles.Float),
+                                                                float.Parse(newStarZStr, System.Globalization.NumberStyles.Float)), Quaternion.identity);
 
-                double[] v = new double[3] { double.Parse(newStarVx, System.Globalization.NumberStyles.Float),
-                                         double.Parse(newStarVy, System.Globalization.NumberStyles.Float),
-                                         double.Parse(newStarVz, System.Globalization.NumberStyles.Float)};
+                double[] v = new double[3] { double.Parse(newStarVxStr, System.Globalization.NumberStyles.Float),
+                                         double.Parse(newStarVyStr, System.Globalization.NumberStyles.Float),
+                                         double.Parse(newStarVzStr, System.Globalization.NumberStyles.Float)};
                 newStar.GetComponent<starObject>().vel = new VEC(3, v);
-                newStar.GetComponent<starObject>().mass = float.Parse(newStarMass, System.Globalization.NumberStyles.Float);
+                newStar.GetComponent<starObject>().mass = float.Parse(newStarMassStr, System.Globalization.NumberStyles.Float);
                 newStar.GetComponent<starObject>().lineRendererColor = Color.yellow;
             }
-
+            if (haveInvalidInput == true)
+            {
+                GUI.enabled = true;
+            }
             if (GUILayout.Button("Clear all stars"))
             {
                 starSystemScript.clearAllStars(-1);
@@ -129,6 +159,18 @@ public class GUILayoutObject : MonoBehaviour
             {
                 GUI.Label(new Rect(Screen.width - 190, Screen.height - 115, 190, 115), starInfoToDisplay);
             }
+        }
+    }
+
+    private void stringToFloatCheckAndAssign(ref string str, ref float a)
+    {
+        if(float.TryParse(str, out a))
+        {
+           
+        }
+        else
+        {
+            haveInvalidInput = true;
         }
     }
 }
