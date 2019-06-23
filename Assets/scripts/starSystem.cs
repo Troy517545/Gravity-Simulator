@@ -11,6 +11,7 @@ public class starSystem
     private int validCount = 0;
     private double G = 6.67408E-11;
     private double minDistanceToDistroy = 7E-1;
+    private bool systemRunning = true;
 
     public starSystem()
     {
@@ -71,6 +72,16 @@ public class starSystem
         }
     }
 
+    public void startSystem()
+    {
+        systemRunning = true;
+    }
+
+    public void pauseSystem()
+    {
+        systemRunning = false;
+    }
+
     public void clearAllStars(int validCondition)
     {
         for (int i = 0; i < maxStarNum; i++)
@@ -84,10 +95,12 @@ public class starSystem
 
     public void update(double h)
     {
-        //updateForwardMethod(h);
-        //updateBackwardMethod(h);
-        updateTrapezoidalMethod(h);
-
+        if (systemRunning == true)
+        {
+            //updateForwardMethod(h);
+            //updateBackwardMethod(h);
+            updateTrapezoidalMethod(h);
+        }
     }
 
     /*

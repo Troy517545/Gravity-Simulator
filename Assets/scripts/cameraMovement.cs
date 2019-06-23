@@ -5,30 +5,34 @@ using UnityEngine;
 
 public class cameraMovement : MonoBehaviour
 {
+    public GameObject escMenu;
+    starSystemObject starSystemScript;
+
+    public bool escMenuActiveStatus = false;
+
     private bool cameraRotationLock = false;
     private bool cameraMovementLock = false;
     private bool slowWalkCondition = false;
-    private float nowWalkSpeed;
 
     public float speedH = 3.0f;
     public float speedV = 3.0f;
-    
-
     public float normalWalkSpeed = 0.5f;
     public float slowWalkSpeed = 0.2f;
 
-
     private float yaw = -180.0f;
     private float pitch = 2.4f;
+    private float nowWalkSpeed;
 
     void Start()
     {
+        starSystemScript = GameObject.Find("starSystemObject").GetComponent<starSystemObject>();
+ 
         nowWalkSpeed = normalWalkSpeed;
     }
 
     void Update()
     {
-        if (cameraRotationLock == false)
+        if (cameraRotationLock == false & escMenuActiveStatus == false)
         {
             yaw += speedH * Input.GetAxis("Mouse X");
             pitch -= speedV * Input.GetAxis("Mouse Y");
@@ -42,7 +46,36 @@ public class cameraMovement : MonoBehaviour
             }
             transform.eulerAngles = new Vector3(pitch, yaw, 0.0f);
         }
-        
+        else if(escMenuActiveStatus == true)
+        {
+            yaw += 0.04f * Input.GetAxis("Mouse X");
+            pitch -= 0.04f * Input.GetAxis("Mouse Y");
+            if (pitch > 85)
+            {
+                pitch = 85;
+            }
+            else if (pitch < -85)
+            {
+                pitch = -85;
+            }
+            transform.eulerAngles = new Vector3(pitch, yaw, 0.0f);
+        }
+
+        if (Input.GetKeyDown("escape"))
+        {
+            if(escMenuActiveStatus == true)
+            {
+                starSystemScript.startSystem();
+                escMenuActiveStatus = false;
+                escMenu.SetActive(false);
+            }
+            else
+            {
+                starSystemScript.pauseSystem();
+                escMenuActiveStatus = true;
+                escMenu.SetActive(true);
+            }
+        }
 
         if (Input.GetKeyDown("l"))
         {
@@ -50,7 +83,7 @@ public class cameraMovement : MonoBehaviour
             cameraMovementLock = (cameraMovementLock == false) ? true : false;
         }
 
-        if (cameraMovementLock == false)
+        if (cameraMovementLock == false & escMenuActiveStatus == false)
         {
             if (Input.GetKey("w"))
             {
@@ -76,16 +109,20 @@ public class cameraMovement : MonoBehaviour
             {
                 transform.position += nowWalkSpeed * (Vector3.up).normalized;
             }
-            //if(Input.GetKeyDown("left alt"))
-            //{
-            //    slowWalkCondition = true;
-            //    nowWalkSpeed = slowWalkSpeed;
-            //}
-            //if (Input.GetKeyUp("left alt"))
-            //{
-            //    slowWalkCondition = false;
-            //    nowWalkSpeed = normalWalkSpeed;
-            //}
+
+#if !UNITY_EDITOR
+            if(Input.GetKeyDown("left alt"))
+            {
+                slowWalkCondition = true;
+                nowWalkSpeed = slowWalkSpeed;
+            }
+            if (Input.GetKeyUp("left alt"))
+            {
+                slowWalkCondition = false;
+                nowWalkSpeed = normalWalkSpeed;
+            }
+#endif
+
             if (Input.GetKeyDown("c"))
             {
                 slowWalkCondition = (slowWalkCondition == true) ? false : true;

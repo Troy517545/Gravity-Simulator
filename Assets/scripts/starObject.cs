@@ -5,16 +5,20 @@ using UnityEngine;
 public class starObject : MonoBehaviour
 {
     starSystemObject starSystemScript;
-    Star s;
+    GUILayoutObject GUIObjectScript;
+    public GameObject trackObjectPrefab;
     LineRenderer lineRenderer;
+
+    Star s;
+    
     public int maxLengthOfLineRenderer = 400;
     private int nowLineRendererIndex = 0;
     public Color lineRendererColor;
     public double mass = 1E9;
-    public GameObject trackObjectPrefab;
-
 
     public VEC vel = new VEC(3);
+
+    public bool selectedToDisplayInfo = false;
     void Awake()
     {
         
@@ -24,6 +28,8 @@ public class starObject : MonoBehaviour
     void Start()
     {
         starSystemScript = GameObject.Find("starSystemObject").GetComponent<starSystemObject>();
+        GUIObjectScript = GameObject.Find("GUIObject").GetComponent<GUILayoutObject>();
+
         s = new Star(transform.position[0], transform.position[1], transform.position[2], vel[0], vel[1], vel[2], mass);
         starSystemScript.addStarToSystem(s);
 
@@ -38,9 +44,7 @@ public class starObject : MonoBehaviour
         );
         lineRenderer.colorGradient = gradient;
 
-        //new GradientColorKey(Color.Lerp(lineRendererColor, Color.white, 0.5f), 0.9f)
-
-
+        selectedToDisplayInfo = false;
     }
 
     // Update is called once per frame
@@ -94,6 +98,44 @@ public class starObject : MonoBehaviour
                     if (maxLengthOfLineRenderer < 5000)
                     {
                         maxLengthOfLineRenderer += 100;
+                    }
+                }
+            }
+        }
+        if(selectedToDisplayInfo == true)
+        {
+            GUIObjectScript.starInfoToDisplay =
+                "Pos x: " + s.pos[0].ToString() + "\n" +
+                "Pos y: " + s.pos[1].ToString() + "\n" +
+                "Pos x: " + s.pos[2].ToString() + "\n" +
+                "V x: " + s.vel[0].ToString() + "\n" +
+                "V y: " + s.vel[1].ToString() + "\n" +
+                "V z: " + s.vel[2].ToString() + "\n";
+        }
+    }
+
+    void OnMouseOver()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            if (selectedToDisplayInfo == true)
+            {
+                selectedToDisplayInfo = false;
+                GUIObjectScript.displayStarInfo = false;
+            }
+            else
+            {
+                selectedToDisplayInfo = true;
+                GUIObjectScript.displayStarInfo = true;
+                GameObject[] allStarObjects = GameObject.FindGameObjectsWithTag("starObject");
+                foreach (GameObject element in allStarObjects)
+                {
+                    if(element != gameObject) // select all other star objects
+                    {
+                        if(element.GetComponent<starObject>().selectedToDisplayInfo == true)
+                        {
+                            element.GetComponent<starObject>().selectedToDisplayInfo = false; // should only allow one star's info to be displayed 
+                        }
                     }
                 }
             }
