@@ -127,7 +127,7 @@ public class GUILayoutObject : MonoBehaviour
 
             if (displayStarInfo == true)
             {
-                GUI.Label(new Rect(Screen.width - 190, Screen.height - 100, 190, 100), starInfoToDisplay);
+                GUI.Label(new Rect(Screen.width - 190, Screen.height - 115, 190, 115), starInfoToDisplay);
             }
         }
     }

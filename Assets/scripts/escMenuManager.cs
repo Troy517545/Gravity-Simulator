@@ -8,9 +8,14 @@ public class escMenuManager : MonoBehaviour
     cameraMovement cameraMovementScript;
     starSystemObject starSystemObjectScript;
     public GameObject dropdownMenuOptionLabelObject;
+    public GameObject menuSliderObject;
+    public GameObject timeStepTextObject;
+    public GameObject InputFieldObject;
     initialConditions initialConditionsScript;
 
     private Dictionary<string, int> map = new Dictionary<string, int>();
+    private float oldSliderValue; 
+
     // Start is called before the first frame update
     void Start()
     {
@@ -24,12 +29,20 @@ public class escMenuManager : MonoBehaviour
         map.Add("2 bodies stable", 4);
         map.Add("3 bodies with collisions", 5);
 
+        oldSliderValue = (float)starSystemObjectScript.h;
+        menuSliderObject.GetComponent<UnityEngine.UI.Slider>().value = oldSliderValue;
+        InputFieldObject.GetComponent<UnityEngine.UI.InputField>().text = menuSliderObject.GetComponent<UnityEngine.UI.Slider>().value.ToString();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if(menuSliderObject.GetComponent<UnityEngine.UI.Slider>().value != oldSliderValue)
+        {
+            oldSliderValue = menuSliderObject.GetComponent<UnityEngine.UI.Slider>().value;
+            InputFieldObject.GetComponent<UnityEngine.UI.InputField>().text = menuSliderObject.GetComponent<UnityEngine.UI.Slider>().value.ToString();
+            starSystemObjectScript.h = oldSliderValue;
+        }
     }
 
     public void closeEscMenu()
@@ -55,5 +68,12 @@ public class escMenuManager : MonoBehaviour
         escMenu.SetActive(false);
         initialConditionsScript.setInitialConditions(map[dropdownMenuOptionLabelObject.GetComponent<UnityEngine.UI.Text>().text]);
         starSystemObjectScript.startSystem();
+    }
+
+    public void updateSliderWithInputFieldValue()
+    {
+        oldSliderValue = float.Parse(InputFieldObject.GetComponent<UnityEngine.UI.InputField>().text);
+        menuSliderObject.GetComponent<UnityEngine.UI.Slider>().value = oldSliderValue;
+        starSystemObjectScript.h = oldSliderValue;
     }
 }

@@ -110,7 +110,8 @@ public class starObject : MonoBehaviour
                 "Pos x: " + s.pos[2].ToString() + "\n" +
                 "V x: " + s.vel[0].ToString() + "\n" +
                 "V y: " + s.vel[1].ToString() + "\n" +
-                "V z: " + s.vel[2].ToString() + "\n";
+                "V z: " + s.vel[2].ToString() + "\n" +
+                "Mass: " + s.mass.ToString() + "\n";
         }
     }
 

@@ -7,11 +7,12 @@ public class initialConditions : MonoBehaviour
     public GameObject starPrefab;
     private double G = 6.67408E-11;
 
-    
+    private int veryInitialCondition = 1;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        setInitialConditions(veryInitialCondition);
     }
 
     // Update is called once per frame
@@ -157,5 +158,10 @@ public class initialConditions : MonoBehaviour
             star_c.GetComponent<starObject>().mass = 1E9;
             star_c.GetComponent<starObject>().lineRendererColor = Color.cyan;
         }
+    }
+
+    private void startInitial(int initialConditions)
+    {
+
     }
 }

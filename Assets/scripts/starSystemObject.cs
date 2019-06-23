@@ -13,6 +13,7 @@ public class starSystemObject : MonoBehaviour
     
     public bool systemRunning = true;
 
+    public double h = 0.2;
 
     // Start is called before the first frame update
     void Start()
@@ -72,7 +73,7 @@ public async Task updateSystem()
     {
         while (true)
         {
-            system.update(0.3);
+            system.update(h);
             await Task.Delay(1);
         }
     }

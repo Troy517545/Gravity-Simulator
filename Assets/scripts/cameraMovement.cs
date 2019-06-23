@@ -21,6 +21,8 @@ public class cameraMovement : MonoBehaviour
 
     private float yaw = -180.0f;
     private float pitch = 2.4f;
+    private float smooth_yaw;
+    private float smooth_pitch;
     private float nowWalkSpeed;
 
     void Start()
@@ -35,7 +37,9 @@ public class cameraMovement : MonoBehaviour
         if (cameraRotationLock == false & escMenuActiveStatus == false)
         {
             yaw += speedH * Input.GetAxis("Mouse X");
+            smooth_yaw = yaw;
             pitch -= speedV * Input.GetAxis("Mouse Y");
+            smooth_pitch = pitch;
             if (pitch > 85)
             {
                 pitch = 85;
@@ -48,8 +52,17 @@ public class cameraMovement : MonoBehaviour
         }
         else if(escMenuActiveStatus == true)
         {
-            yaw += 0.04f * Input.GetAxis("Mouse X");
-            pitch -= 0.04f * Input.GetAxis("Mouse Y");
+
+            if (Input.mousePosition.x <= Screen.width * 0.99 & Input.mousePosition.x >= Screen.width * 0.01)
+            {
+                yaw += 0.04f * Input.GetAxis("Mouse X");
+            }
+
+            if (Input.mousePosition.y <= Screen.height * 0.99 & Input.mousePosition.y >= Screen.height * 0.01)
+            {
+                pitch -= 0.04f * Input.GetAxis("Mouse Y");
+            }
+                
             if (pitch > 85)
             {
                 pitch = 85;
@@ -58,7 +71,9 @@ public class cameraMovement : MonoBehaviour
             {
                 pitch = -85;
             }
-            transform.eulerAngles = new Vector3(pitch, yaw, 0.0f);
+            smooth_pitch = Mathf.Lerp(smooth_pitch, pitch, 0.1f);
+            smooth_yaw = Mathf.Lerp(smooth_yaw, yaw, 0.1f);
+            transform.eulerAngles = new Vector3(smooth_pitch, smooth_yaw, 0.0f);
         }
 
         if (Input.GetKeyDown("escape"))
