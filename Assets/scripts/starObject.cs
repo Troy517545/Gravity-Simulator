@@ -31,7 +31,7 @@ public class starObject : MonoBehaviour
         GUIObjectScript = GameObject.Find("GUIObject").GetComponent<GUILayoutObject>();
 
         s = new Star(transform.position[0], transform.position[1], transform.position[2], vel[0], vel[1], vel[2], mass);
-        starSystemScript.addStarToSystem(s);
+        starSystemScript.AddStarToSystem(s);
 
         lineRenderer = GetComponent<LineRenderer>();
         lineRenderer.widthMultiplier = 0.1f;

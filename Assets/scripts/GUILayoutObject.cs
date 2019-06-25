@@ -5,7 +5,7 @@ using UnityEngine;
 public class GUILayoutObject : MonoBehaviour
 {
     public GameObject myPrefab;
-    starSystemObject starSystemScript;
+    starSystemObject starSystemObjectScript;
     cameraMovement cameraMovementScript;
 
     public string newStarXStr = "-40.0";
@@ -33,7 +33,7 @@ public class GUILayoutObject : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        starSystemScript = GameObject.Find("starSystemObject").GetComponent<starSystemObject>();
+        starSystemObjectScript = GameObject.Find("starSystemObject").GetComponent<starSystemObject>();
         cameraMovementScript = GameObject.Find("Main Camera").GetComponent<cameraMovement>();
 
         newStarXStr = "0.0";
@@ -71,43 +71,43 @@ public class GUILayoutObject : MonoBehaviour
             GUILayout.BeginHorizontal("box");
             GUILayout.Label("Pos x: ");
             newStarXStr = GUILayout.TextField(newStarXStr, 25, GUILayout.Width(60));
-            stringToFloatCheckAndAssign(ref newStarXStr, ref newStarX);
+            StringToFloatCheckAndAssign(ref newStarXStr, ref newStarX);
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal("box");
             GUILayout.Label("Pos y: ");
             newStarYStr = GUILayout.TextField(newStarYStr, 25, GUILayout.Width(60));
-            stringToFloatCheckAndAssign(ref newStarYStr, ref newStarY);
+            StringToFloatCheckAndAssign(ref newStarYStr, ref newStarY);
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal("box");
             GUILayout.Label("Pos z: ");
             newStarZStr = GUILayout.TextField(newStarZStr, 25, GUILayout.Width(60));
-            stringToFloatCheckAndAssign(ref newStarZStr, ref newStarZ);
+            StringToFloatCheckAndAssign(ref newStarZStr, ref newStarZ);
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal("box");
             GUILayout.Label("V x: ");
             newStarVxStr = GUILayout.TextField(newStarVxStr, 25, GUILayout.Width(60));
-            stringToFloatCheckAndAssign(ref newStarVxStr, ref newStarVx);
+            StringToFloatCheckAndAssign(ref newStarVxStr, ref newStarVx);
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal("box");
             GUILayout.Label("V y: ");
             newStarVyStr = GUILayout.TextField(newStarVyStr, 25, GUILayout.Width(60));
-            stringToFloatCheckAndAssign(ref newStarVyStr, ref newStarVy);
+            StringToFloatCheckAndAssign(ref newStarVyStr, ref newStarVy);
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal("box");
             GUILayout.Label("V z: ");
             newStarVzStr = GUILayout.TextField(newStarVzStr, 25, GUILayout.Width(60));
-            stringToFloatCheckAndAssign(ref newStarVzStr, ref newStarVz);
+            StringToFloatCheckAndAssign(ref newStarVzStr, ref newStarVz);
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal("box");
             GUILayout.Label("Mass: ");
             newStarMassStr = GUILayout.TextField(newStarMassStr, 25, GUILayout.Width(60));
-            stringToFloatCheckAndAssign(ref newStarMassStr, ref newStarMass);
+            StringToFloatCheckAndAssign(ref newStarMassStr, ref newStarMass);
             GUILayout.EndHorizontal();
 
             if (haveInvalidInput == true)
@@ -133,36 +133,35 @@ public class GUILayoutObject : MonoBehaviour
             }
             if (GUILayout.Button("Clear all stars"))
             {
-                starSystemScript.clearAllStars(-1);
+                starSystemObjectScript.ClearAllStars(-1);
             }
 
 
             if (GUI.Button(new Rect(5, Screen.height - 57, 111, 23), "Start"))
             {
-                if (starSystemScript.systemRunning == false)
+                if (starSystemObjectScript.systemRunning == false)
                 {
-                    starSystemScript.startSystem();
-                    starSystemScript.systemRunning = true;
+                    starSystemObjectScript.StartSystem();
+                    starSystemObjectScript.systemRunning = true;
                 }
             }
 
             if (GUI.Button(new Rect(5, Screen.height - 30, 110, 23), "Pause"))
             {
-                if (starSystemScript.systemRunning == true)
+                if (starSystemObjectScript.systemRunning == true)
                 {
-                    starSystemScript.pauseSystem();
-                    starSystemScript.systemRunning = false;
+                    starSystemObjectScript.PauseSystem();
+                    starSystemObjectScript.systemRunning = false;
                 }
             }
-
-            if (displayStarInfo == true)
-            {
-                GUI.Label(new Rect(Screen.width - 190, Screen.height - 115, 190, 115), starInfoToDisplay);
-            }
+        }
+        if (cameraMovementScript.escMenuActiveStatus == false & displayStarInfo == true)
+        {
+            GUI.Label(new Rect(Screen.width - 190, Screen.height - 115, 190, 115), starInfoToDisplay);
         }
     }
 
-    private void stringToFloatCheckAndAssign(ref string str, ref float a)
+    private void StringToFloatCheckAndAssign(ref string str, ref float a)
     {
         if(float.TryParse(str, out a))
         {

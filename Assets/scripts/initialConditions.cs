@@ -12,7 +12,7 @@ public class initialConditions : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        setInitialConditions(veryInitialCondition);
+        SetInitialConditions(veryInitialCondition);
     }
 
     // Update is called once per frame
@@ -21,7 +21,7 @@ public class initialConditions : MonoBehaviour
         
     }
 
-    public void setInitialConditions(int initialConditions)
+    public void SetInitialConditions(int initialConditions)
     {
         if (initialConditions == 1)
         {
@@ -158,10 +158,5 @@ public class initialConditions : MonoBehaviour
             star_c.GetComponent<starObject>().mass = 1E9;
             star_c.GetComponent<starObject>().lineRendererColor = Color.cyan;
         }
-    }
-
-    private void startInitial(int initialConditions)
-    {
-
     }
 }

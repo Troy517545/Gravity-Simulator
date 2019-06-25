@@ -20,7 +20,7 @@ public class starSystemObject : MonoBehaviour
     {
         GUIObjectScript = GameObject.Find("GUIObject").GetComponent<GUILayoutObject>();
         cameraMovementScript = GameObject.Find("Main Camera").GetComponent<cameraMovement>();
-        updateSystem();
+        UpdateSystem();
     }
 
     // Update is called once per frame
@@ -29,9 +29,9 @@ public class starSystemObject : MonoBehaviour
         
     }
 
-    public void addStarToSystem(Star a)
+    public void AddStarToSystem(Star a)
     {
-        system.addStar(a);
+        system.AddStar(a);
         Debug.Log("Added star to system!");
     }
 
@@ -39,9 +39,9 @@ public class starSystemObject : MonoBehaviour
      * validCondition = 0: keep track
      * validCondition = -1: clear track as well
      */
-    public void clearAllStars(int validCondition)
+    public void ClearAllStars(int validCondition)
     {
-        system.clearAllStars(validCondition);
+        system.ClearAllStars(validCondition);
         GameObject[] allTrackObjects = GameObject.FindGameObjectsWithTag("trackObject");
         foreach (GameObject element in allTrackObjects)
         {
@@ -50,30 +50,30 @@ public class starSystemObject : MonoBehaviour
         GUIObjectScript.displayStarInfo = false;
     }
 
-    public void startSystem()
+    public void StartSystem()
     {
         if (systemRunning == false)
         {
-            system.startSystem();
+            system.StartSystem();
             systemRunning = true;
         }
     }
 
-    public void pauseSystem()
+    public void PauseSystem()
     {
         if (systemRunning == true)
         {
-            system.pauseSystem();
+            system.PauseSystem();
             systemRunning = false;
         }
     }
     
 
-public async Task updateSystem()
+public async Task UpdateSystem()
     {
         while (true)
         {
-            system.update(h);
+            system.UpdateSystem(h);
             await Task.Delay(1);
         }
     }

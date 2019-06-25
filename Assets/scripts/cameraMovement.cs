@@ -6,7 +6,7 @@ using UnityEngine;
 public class cameraMovement : MonoBehaviour
 {
     public GameObject escMenu;
-    starSystemObject starSystemScript;
+    starSystemObject starSystemObjectScript;
 
     public bool escMenuActiveStatus = false;
 
@@ -25,9 +25,11 @@ public class cameraMovement : MonoBehaviour
     private float smooth_pitch;
     private float nowWalkSpeed;
 
+    public bool systemRunningStatusBeforeMenuOpened = true;
+
     void Start()
     {
-        starSystemScript = GameObject.Find("starSystemObject").GetComponent<starSystemObject>();
+        starSystemObjectScript = GameObject.Find("starSystemObject").GetComponent<starSystemObject>();
  
         nowWalkSpeed = normalWalkSpeed;
     }
@@ -80,13 +82,17 @@ public class cameraMovement : MonoBehaviour
         {
             if(escMenuActiveStatus == true)
             {
-                starSystemScript.startSystem();
+                if(systemRunningStatusBeforeMenuOpened == true)
+                {
+                    starSystemObjectScript.StartSystem();
+                }
                 escMenuActiveStatus = false;
                 escMenu.SetActive(false);
             }
             else
             {
-                starSystemScript.pauseSystem();
+                systemRunningStatusBeforeMenuOpened = starSystemObjectScript.systemRunning;
+                starSystemObjectScript.PauseSystem();
                 escMenuActiveStatus = true;
                 escMenu.SetActive(true);
             }

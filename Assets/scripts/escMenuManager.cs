@@ -45,14 +45,17 @@ public class escMenuManager : MonoBehaviour
         }
     }
 
-    public void closeEscMenu()
+    public void CloseEscMenu()
     {
         cameraMovementScript.escMenuActiveStatus = false;
         escMenu.SetActive(false);
-        starSystemObjectScript.startSystem();
+        if(cameraMovementScript.systemRunningStatusBeforeMenuOpened == true)
+        {
+            starSystemObjectScript.StartSystem();
+        }
     }
 
-    public void terminateProgram()
+    public void TerminateProgram()
     {
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
@@ -61,16 +64,16 @@ public class escMenuManager : MonoBehaviour
 #endif
     }
 
-    public void acceptDropdownMenuConditions()
+    public void AcceptDropdownMenuConditions()
     {
-        starSystemObjectScript.clearAllStars(-1);
+        starSystemObjectScript.ClearAllStars(-1);
         cameraMovementScript.escMenuActiveStatus = false;
         escMenu.SetActive(false);
-        initialConditionsScript.setInitialConditions(map[dropdownMenuOptionLabelObject.GetComponent<UnityEngine.UI.Text>().text]);
-        starSystemObjectScript.startSystem();
+        initialConditionsScript.SetInitialConditions(map[dropdownMenuOptionLabelObject.GetComponent<UnityEngine.UI.Text>().text]);
+        starSystemObjectScript.StartSystem();
     }
 
-    public void updateSliderWithInputFieldValue()
+    public void UpdateSliderWithInputFieldValue()
     {
         oldSliderValue = float.Parse(InputFieldObject.GetComponent<UnityEngine.UI.InputField>().text);
         menuSliderObject.GetComponent<UnityEngine.UI.Slider>().value = oldSliderValue;
