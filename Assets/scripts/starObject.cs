@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
+
 
 public class starObject : MonoBehaviour
 {
@@ -141,5 +143,15 @@ public class starObject : MonoBehaviour
                 }
             }
         }
+    }
+
+    private double Distance(VEC a, VEC b)
+    {
+        double dist = 0;
+        for (int i = 0; i < 3; i++)
+        {
+            dist += Math.Pow(a[i] - b[i], 2);
+        }
+        return Math.Sqrt(dist);
     }
 }

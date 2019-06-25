@@ -9,6 +9,8 @@ public class initialConditions : MonoBehaviour
 
     private int veryInitialCondition = 1;
 
+    private float z_vel = 0.0f;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -28,7 +30,7 @@ public class initialConditions : MonoBehaviour
             Color color;
             color.a = 0.75f;
             float scale = 10f;
-            float z_vel = 0.01f;
+            
             var star_a = Instantiate(starPrefab, new Vector3(scale * 0.97000436f, scale * -0.24308753f, 0.0f), Quaternion.identity);
             var star_b = Instantiate(starPrefab, new Vector3(scale * -0.97000436f, scale * 0.24308753f, 0.0f), Quaternion.identity);
             var star_c = Instantiate(starPrefab, new Vector3(0.0f, 0.0f, 0.0f), Quaternion.identity);
@@ -60,7 +62,6 @@ public class initialConditions : MonoBehaviour
             Color color;
             color.a = 0.75f;
             float scale = 10f;
-            float z_vel = 0.01f;
             var star_a = Instantiate(starPrefab, new Vector3(scale * 0.98000436f, scale * -0.24308753f, 0.0f), Quaternion.identity);
             var star_b = Instantiate(starPrefab, new Vector3(scale * -0.97000436f, scale * 0.24308753f, 0.0f), Quaternion.identity);
             var star_c = Instantiate(starPrefab, new Vector3(0.0f, 0.0f, 0.0f), Quaternion.identity);
@@ -96,21 +97,21 @@ public class initialConditions : MonoBehaviour
             var star_b = Instantiate(starPrefab, new Vector3(-1.0f, 0.0f, 0.0f), Quaternion.identity);
             var star_c = Instantiate(starPrefab, new Vector3(-3f, 0.0f, 0.0f), Quaternion.identity);
 
-            double[] v = new double[3] { 0, 0.2 - 4.0 / 30.0, 0.005 };
+            double[] v = new double[3] { 0, 0.2 - 4.0 / 30.0, z_vel };
             star_a.GetComponent<starObject>().vel = new VEC(3, v);
             star_a.GetComponent<starObject>().mass = 2E9;
             color = Color.blue;
             color.a = 0.75f;
             star_a.GetComponent<starObject>().lineRendererColor = color;
 
-            v = new double[3] { 0, -0.2 - 4.0 / 30.0, 0.005 };
+            v = new double[3] { 0, -0.2 - 4.0 / 30.0, z_vel };
             star_b.GetComponent<starObject>().vel = new VEC(3, v);
             star_b.GetComponent<starObject>().mass = 2E9;
             color = Color.green;
             color.a = 0.75f;
             star_b.GetComponent<starObject>().lineRendererColor = color;
 
-            v = new double[3] { 0.0, 0.4 - 4.0 / 30.0, 0.005 };
+            v = new double[3] { 0.0, 0.4 - 4.0 / 30.0, z_vel };
             star_c.GetComponent<starObject>().vel = new VEC(3, v);
             star_c.GetComponent<starObject>().mass = 2E9;
             color = Color.red;
@@ -153,7 +154,7 @@ public class initialConditions : MonoBehaviour
             star_b.GetComponent<starObject>().mass = 2E8;
             star_b.GetComponent<starObject>().lineRendererColor = Color.green;
 
-            v = new double[3] { 0, 0.0, -0.01 };
+            v = new double[3] { 0, 0.0, 0 };
             star_c.GetComponent<starObject>().vel = new VEC(3, v);
             star_c.GetComponent<starObject>().mass = 1E9;
             star_c.GetComponent<starObject>().lineRendererColor = Color.cyan;
