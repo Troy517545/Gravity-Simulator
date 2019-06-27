@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using System.IO;
 
 public class starSystem
 {
@@ -21,6 +22,12 @@ public class starSystem
     private VEC alpha;
     private VEC[,] old_velAll;
     private VEC[,] old_posAll;
+
+    private int printCount = 100;
+    private int printNum = 100;
+    private int nowPrintCount = 0;
+    private System.IO.StreamWriter file;
+
     public starSystem()
     {
         validMap = new bool[maxStarNum];
@@ -114,11 +121,23 @@ public class starSystem
         
         if (systemRunning == true)
         {
-            Debug.Log(distance(s[0].vel, new VEC(3)));
+            //if (printNum < 0)
+            //{
+            //    printNum = printCount;
+            //    nowPrintCount++;
+            //    Debug.Log(nowPrintCount.ToString());
+            //    string lines = distance(s[0].pos, new VEC(3)).ToString();
+            //    using (StreamWriter sw = File.AppendText("./test.txt"))
+            //    {
+            //        sw.WriteLine(lines);
+            //    }
+            //}
+            //printNum--;
+
             //UpdateForwardMethod(h);
             //UpdateBackwardMethod(h);
-            //UpdateTrapezoidalMethod(h);
-            UpdateGearsMethod(h);
+            UpdateTrapezoidalMethod(h);
+            //UpdateGearsMethod(h);
         }
     }
 
@@ -788,7 +807,6 @@ public class starSystem
             if (maxIterNum == 0)
             {
                 Debug.Log("Max iter number reached. Err: " + err + "  Using Forward method instead in this period.");
-                Debug.Log(err);
                 UpdateForwardMethod(h / 2.0);
                 UpdateForwardMethod(h / 2.0);
                 return;
@@ -944,5 +962,14 @@ public class starSystem
         }
         VEC v = numericalFunctions.LU_Solve(A, b);
         return v;
+    }
+
+    public static void WriteToBinaryFile<T>(string filePath, T objectToWrite, bool append = false)
+    {
+        using (Stream stream = File.Open(filePath, append ? FileMode.Append : FileMode.Create))
+        {
+            var binaryFormatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
+            binaryFormatter.Serialize(stream, objectToWrite);
+        }
     }
 }

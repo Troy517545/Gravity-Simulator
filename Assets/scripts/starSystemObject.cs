@@ -21,6 +21,7 @@ public class starSystemObject : MonoBehaviour
         GUIObjectScript = GameObject.Find("GUIObject").GetComponent<GUILayoutObject>();
         cameraMovementScript = GameObject.Find("Main Camera").GetComponent<cameraMovement>();
         UpdateSystem();
+        
     }
 
     // Update is called once per frame
@@ -69,7 +70,7 @@ public class starSystemObject : MonoBehaviour
     }
     
 
-public async Task UpdateSystem()
+    public async Task UpdateSystem()
     {
         while (true)
         {
@@ -77,4 +78,5 @@ public async Task UpdateSystem()
             await Task.Delay(1);
         }
     }
+
 }

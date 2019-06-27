@@ -9,12 +9,12 @@ public class initialConditions : MonoBehaviour
 
     private int veryInitialCondition = 1;
 
-    private float z_vel = 0.0f;
+    private float z_vel = 0.01f;
 
     // Start is called before the first frame update
     void Start()
     {
-        SetInitialConditions(veryInitialCondition);
+        SetInitialConditions(1);
     }
 
     // Update is called once per frame
@@ -127,12 +127,12 @@ public class initialConditions : MonoBehaviour
             var star_a = Instantiate(starPrefab, new Vector3(5.0f, 0.0f, 0.0f), Quaternion.identity);
             var star_b = Instantiate(starPrefab, new Vector3(-5.0f, 0.0f, 0.0f), Quaternion.identity);
 
-            double[] v = new double[3] { 0, 0.02583424, 0 };
+            double[] v = new double[3] { 0, 0.02583424084, 0 };
             star_a.GetComponent<starObject>().vel = new VEC(3, v);
             star_a.GetComponent<starObject>().mass = 2E8;
             star_a.GetComponent<starObject>().lineRendererColor = Color.blue;
 
-            v = new double[3] { 0, -0.02583424, 0 };
+            v = new double[3] { 0, -0.02583424084, 0 };
             star_b.GetComponent<starObject>().vel = new VEC(3, v);
             star_b.GetComponent<starObject>().mass = 2E8;
             star_b.GetComponent<starObject>().lineRendererColor = Color.green;
@@ -144,12 +144,12 @@ public class initialConditions : MonoBehaviour
             var star_b = Instantiate(starPrefab, new Vector3(-5.0f, 0.0f, 0.0f), Quaternion.identity);
             var star_c = Instantiate(starPrefab, new Vector3(0.0f, 0.0f, 10f), Quaternion.identity);
 
-            double[] v = new double[3] { 0, 0.02583424, 0 };
+            double[] v = new double[3] { 0, 0.02583424084, 0 };
             star_a.GetComponent<starObject>().vel = new VEC(3, v);
             star_a.GetComponent<starObject>().mass = 2E8;
             star_a.GetComponent<starObject>().lineRendererColor = Color.blue;
 
-            v = new double[3] { 0, -0.02583424, 0 };
+            v = new double[3] { 0, -0.02583424084, 0 };
             star_b.GetComponent<starObject>().vel = new VEC(3, v);
             star_b.GetComponent<starObject>().mass = 2E8;
             star_b.GetComponent<starObject>().lineRendererColor = Color.green;
