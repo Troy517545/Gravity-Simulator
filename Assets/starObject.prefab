@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 7484158079219108996}
   - component: {fileID: 7484158079219108999}
   - component: {fileID: 8248175765220608119}
+  - component: {fileID: -4503546299017623087}
   m_Layer: 0
   m_Name: starObject
   m_TagString: starObject
@@ -105,11 +106,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ae1859ca4636ab468a44810067dd20c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  trackObjectPrefab: {fileID: 5926353489502875903, guid: 8ac2e2151383cb54cb8585e9340143cd,
+    type: 3}
   maxLengthOfLineRenderer: 400
   lineRendererColor: {r: 0, g: 0, b: 0, a: 0}
   mass: 1000000000
-  trackObjectPrefab: {fileID: 5926353489502875903, guid: 8ac2e2151383cb54cb8585e9340143cd,
-    type: 3}
+  selectedToDisplayInfo: 0
 --- !u!120 &8248175765220608119
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -203,3 +205,17 @@ LineRenderer:
     generateLightingData: 0
   m_UseWorldSpace: 1
   m_Loop: 0
+--- !u!114 &-4503546299017623087
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7484158079219108998}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 696a14ce364faf04ca387784fa8b789c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlowColor: {r: 1, g: 1, b: 1, a: 0}
+  LerpFactor: 15
