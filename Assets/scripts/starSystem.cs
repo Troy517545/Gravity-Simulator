@@ -3,30 +3,39 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using System.IO;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Diagnostics;
+using Debug = UnityEngine.Debug;
+
 
 public class starSystem
 {
-    public Star[] s;
+    public Star[] s; 
     int maxStarNum = 20;
-    bool[] validMap;
-    private int validCount = 0;
+    bool[] validMap; // Check if objects in s array are valid
+    private int validCount = 0; // Valid star number
     private double G = 6.67408E-11;
     private double minDistanceToDistroy = 7E-1;
     private bool systemRunning = true;
 
     
     
-    public int numOfForwardMethodInstead = 10;
-    public int gearsMethodOrderNum = 2;
-    private int updateNumBeforeGearsMethod = 0;
-    private VEC alpha;
+    public int numOfForwardMethodInstead = 10; // Number of Forward Method used instead when other updata methods cannot perform
+    public int gearsMethodOrderNum = 2; // Order of Gear's Method
+    private int updateNumBeforeGearsMethod = 0; // When using n'th order Gear's Method,
+                                                // the first n-1 times of update need to apply TrapezoidalMethod
+    private VEC alpha; // the coefficients of Gear's Method
     private VEC[,] old_velAll;
     private VEC[,] old_posAll;
 
     private int printCount = 100;
     private int printNum = 100;
     private int nowPrintCount = 0;
+
     private System.IO.StreamWriter file;
+
 
     public starSystem()
     {
@@ -39,6 +48,9 @@ public class starSystem
         alpha = new VEC(gearsMethodOrderNum + 1);
     }
 
+    /*
+     * Add star to system
+     */
     public void AddStar(Star a)
     {
         int index = -1;
@@ -67,6 +79,10 @@ public class starSystem
         }
     }
 
+    /*
+     * Destroy star from the system
+     * If input param validCondition is set to -1, the orbit track will be removed; if set to 0, the orbit track will remain.
+     */
     public void DestroyStar(Star a, int validCondition)
     {
         int index = -1;
@@ -105,6 +121,10 @@ public class starSystem
         systemRunning = false;
     }
 
+    /*
+     * Destroy all stars from the system
+     * If input param validCondition is set to -1, the orbit track will be removed; if set to 0, the orbit track will remain.
+     */
     public void ClearAllStars(int validCondition)
     {
         for (int i = 0; i < maxStarNum; i++)
@@ -116,9 +136,11 @@ public class starSystem
         }
     }
 
+    /*
+     * Update system with time interval h
+     */
     public void UpdateSystem(double h)
     {
-        
         if (systemRunning == true)
         {
             //if (printNum < 0)
@@ -212,7 +234,7 @@ public class starSystem
                 {
                     if (i != j)
                     {
-                        a += alpha[gearsMethodOrderNum] * VEC.Normalize(new_posAll[j] - new_posAll[i]) * massAll[j] / distancePow2(new_posAll[i], new_posAll[j]);
+                        a += alpha[gearsMethodOrderNum] * VEC.Normalize(new_posAll[j] - new_posAll[i]) * massAll[j] / DistancePow2(new_posAll[i], new_posAll[j]);
                     }
                 }
                 F[i] = G * a;
@@ -256,12 +278,12 @@ public class starSystem
                                 if (a == b)
                                 {
                                     tmp[a][b] = massAll[j] * G *
-                                        (-3 * Math.Pow(distancePow2(new_posAll[j], new_posAll[i]), -2.5) * (new_posAll[j][a] - new_posAll[i][a]) * new_posAll[j][a]
-                                        + Math.Pow(distancePow2(new_posAll[j], new_posAll[i]), -1.5));
+                                        (-3 * Math.Pow(DistancePow2(new_posAll[j], new_posAll[i]), -2.5) * (new_posAll[j][a] - new_posAll[i][a]) * new_posAll[j][a]
+                                        + Math.Pow(DistancePow2(new_posAll[j], new_posAll[i]), -1.5));
                                 }
                                 else
                                 {
-                                    tmp[a][b] = massAll[j] * G * -3 * Math.Pow(distancePow2(new_posAll[j], new_posAll[i]), -2.5) * (new_posAll[j][a] - new_posAll[i][a]) * (new_posAll[j][b] - new_posAll[i][b]);
+                                    tmp[a][b] = massAll[j] * G * -3 * Math.Pow(DistancePow2(new_posAll[j], new_posAll[i]), -2.5) * (new_posAll[j][a] - new_posAll[i][a]) * (new_posAll[j][b] - new_posAll[i][b]);
                                 }
                             }
                         }
@@ -280,8 +302,8 @@ public class starSystem
                                         if (k != j)
                                         {
                                             sInTmp += massAll[k] *
-                                                (3 * Math.Pow(distancePow2(new_posAll[k], new_posAll[j]), -2.5) * (new_posAll[k][a] - new_posAll[j][a]) * (new_posAll[k][a] - new_posAll[i][a])
-                                                - Math.Pow(distancePow2(new_posAll[k], new_posAll[j]), -1.5));
+                                                (3 * Math.Pow(DistancePow2(new_posAll[k], new_posAll[j]), -2.5) * (new_posAll[k][a] - new_posAll[j][a]) * (new_posAll[k][a] - new_posAll[i][a])
+                                                - Math.Pow(DistancePow2(new_posAll[k], new_posAll[j]), -1.5));
                                         }
                                     }
                                     tmp[a][a] = G * sInTmp;
@@ -294,7 +316,7 @@ public class starSystem
                                         if (k != j)
                                         {
                                             sInTmp += massAll[k] *
-                                                (3 * Math.Pow(distancePow2(new_posAll[k], new_posAll[j]), -2.5) * (new_posAll[k][a] - new_posAll[j][a]) * (new_posAll[k][b] * new_posAll[i][b]));
+                                                (3 * Math.Pow(DistancePow2(new_posAll[k], new_posAll[j]), -2.5) * (new_posAll[k][a] - new_posAll[j][a]) * (new_posAll[k][b] * new_posAll[i][b]));
                                         }
                                     }
                                     tmp[a][a] = G * sInTmp;
@@ -392,7 +414,7 @@ public class starSystem
         {
             for (int j = i + 1; j < validCount; j++)
             {
-                if (distanceBetweenStarsPow2(s[validIndex[i]], s[validIndex[j]]) < minDistanceToDistroy)
+                if (DistanceBetweenStarsPow2(s[validIndex[i]], s[validIndex[j]]) < minDistanceToDistroy)
                 {
                     s[validIndex[j]].pos += (s[validIndex[i]].pos - s[validIndex[j]].pos) * s[validIndex[i]].mass / (s[validIndex[j]].mass + s[validIndex[i]].mass);
                     s[validIndex[j]].vel = (s[validIndex[j]].vel * s[validIndex[j]].mass + s[validIndex[i]].vel * s[validIndex[i]].mass) / (s[validIndex[j]].mass + s[validIndex[i]].mass);
@@ -409,6 +431,8 @@ public class starSystem
      * 
      * Trapezoidal method on velocity 
      * Trapezoidal method on position
+     *
+     * Is the most accurate method 
      */
     public void UpdateTrapezoidalMethod(double h)
     {
@@ -416,9 +440,10 @@ public class starSystem
         {
             return;
         }
+
+        // Map valid star index into validIndex
         int[] validIndex = new int[validCount];
         int indexTmp = 0;
-
         for (int i = 0; i < maxStarNum; i++)
         {
             if (validMap[i] == true)
@@ -428,6 +453,7 @@ public class starSystem
             }
         }
 
+        // copy velocity and position of all stars into arrays
         VEC[] velAll = new VEC[validCount];
         VEC[] new_velAll = new VEC[validCount];
 
@@ -446,13 +472,14 @@ public class starSystem
             massAll[i] = s[validIndex[i]].mass;
         }
 
-        double e_threshold = 1E-9;
-        double err = 1.0 + e_threshold;
-        int maxIterNum = 100;
+        double e_threshold = 1E-9; // the error threshold of performing Newton’s Method
+        double err = 1.0 + e_threshold; 
+        int maxIterNum = 100; // Newton’s Method might not converge, we need a max iteration number to terminate.
 
         while (err > e_threshold & maxIterNum > 0)
         {
             VECV3 F = new VECV3(2 * validCount);
+
             for (int i = 0; i < validCount; i++)
             {
                 VEC a = new VEC(3);
@@ -460,12 +487,13 @@ public class starSystem
                 {
                     if (i != j)
                     {
-                        a += 0.5 * VEC.Normalize(new_posAll[j] - new_posAll[i]) * massAll[j] / distancePow2(new_posAll[i], new_posAll[j])
-                            + 0.5 * VEC.Normalize(posAll[j] - posAll[i]) * massAll[j] / distancePow2(posAll[i], posAll[j]);
+                        a += 0.5 * VEC.Normalize(new_posAll[j] - new_posAll[i]) * massAll[j] / DistancePow2(new_posAll[i], new_posAll[j])
+                            + 0.5 * VEC.Normalize(posAll[j] - posAll[i]) * massAll[j] / DistancePow2(posAll[i], posAll[j]);
                     }
                 }
                 F[i] = G * a - (new_velAll[i] - velAll[i]) / h;
             }
+
             for (int i = validCount; i < 2 * validCount; i++)
             {
                 F[i] = (new_posAll[i - validCount] - posAll[i - validCount]) / h - 0.5 * (new_velAll[i - validCount] + velAll[i - validCount]);
@@ -497,12 +525,12 @@ public class starSystem
                                 if (a == b)
                                 {
                                     tmp[a][b] = massAll[j] * G *
-                                        (-3 * Math.Pow(distancePow2(new_posAll[j], new_posAll[i]), -2.5) * (new_posAll[j][a] - new_posAll[i][a]) * new_posAll[j][a]
-                                        + Math.Pow(distancePow2(new_posAll[j], new_posAll[i]), -1.5));
+                                        (-3 * Math.Pow(DistancePow2(new_posAll[j], new_posAll[i]), -2.5) * (new_posAll[j][a] - new_posAll[i][a]) * new_posAll[j][a]
+                                        + Math.Pow(DistancePow2(new_posAll[j], new_posAll[i]), -1.5));
                                 }
                                 else
                                 {
-                                    tmp[a][b] = massAll[j] * G * -3 * Math.Pow(distancePow2(new_posAll[j], new_posAll[i]), -2.5) * (new_posAll[j][a] - new_posAll[i][a]) * (new_posAll[j][b] - new_posAll[i][b]);
+                                    tmp[a][b] = massAll[j] * G * -3 * Math.Pow(DistancePow2(new_posAll[j], new_posAll[i]), -2.5) * (new_posAll[j][a] - new_posAll[i][a]) * (new_posAll[j][b] - new_posAll[i][b]);
                                 }
                             }
                         }
@@ -521,8 +549,8 @@ public class starSystem
                                         if (k != j)
                                         {
                                             sInTmp += massAll[k] *
-                                                (3 * Math.Pow(distancePow2(new_posAll[k], new_posAll[j]), -2.5) * (new_posAll[k][a] - new_posAll[j][a]) * (new_posAll[k][a] - new_posAll[i][a])
-                                                - Math.Pow(distancePow2(new_posAll[k], new_posAll[j]), -1.5));
+                                                (3 * Math.Pow(DistancePow2(new_posAll[k], new_posAll[j]), -2.5) * (new_posAll[k][a] - new_posAll[j][a]) * (new_posAll[k][a] - new_posAll[i][a])
+                                                - Math.Pow(DistancePow2(new_posAll[k], new_posAll[j]), -1.5));
                                         }
                                     }
                                     tmp[a][a] = G * sInTmp;
@@ -535,7 +563,7 @@ public class starSystem
                                         if (k != j)
                                         {
                                             sInTmp += massAll[k] *
-                                                (3 * Math.Pow(distancePow2(new_posAll[k], new_posAll[j]), -2.5) * (new_posAll[k][a] - new_posAll[j][a]) * (new_posAll[k][b] * new_posAll[i][b]));
+                                                (3 * Math.Pow(DistancePow2(new_posAll[k], new_posAll[j]), -2.5) * (new_posAll[k][a] - new_posAll[j][a]) * (new_posAll[k][b] * new_posAll[i][b]));
                                         }
                                     }
                                     tmp[a][a] = G * sInTmp;
@@ -578,7 +606,9 @@ public class starSystem
                     }
                 }
             }
+
             VECV3 delta = numericalFunctions.LU_Solve(JF, -F);
+            
             for (int i = 0; i < validCount; i++)
             {
                 new_velAll[i] += delta[i];
@@ -597,6 +627,8 @@ public class starSystem
                 return;
             }
         }
+
+        // Apply new position and velocity to Star objects
         for (int i = 0; i < validCount; i++)
         {
             if (maxIterNum != 0)
@@ -606,11 +638,13 @@ public class starSystem
             }
         }
 
+        // Check if any pair of stars have distance smaller than minDistanceToDistroy.
+        // If so, merge two stars.
         for (int i = 0; i < validCount; i++)
         {
             for (int j = i + 1; j < validCount; j++)
             {
-                if (distanceBetweenStarsPow2(s[validIndex[i]], s[validIndex[j]]) < minDistanceToDistroy)
+                if (DistanceBetweenStarsPow2(s[validIndex[i]], s[validIndex[j]]) < minDistanceToDistroy)
                 {
                     s[validIndex[j]].pos += (s[validIndex[i]].pos - s[validIndex[j]].pos) * s[validIndex[i]].mass / (s[validIndex[j]].mass + s[validIndex[i]].mass);
                     s[validIndex[j]].vel = (s[validIndex[j]].vel * s[validIndex[j]].mass + s[validIndex[i]].vel * s[validIndex[i]].mass) / (s[validIndex[j]].mass + s[validIndex[i]].mass);
@@ -678,7 +712,7 @@ public class starSystem
                 {
                     if (i != j)
                     {
-                        a += VEC.Normalize(new_posAll[j] - new_posAll[i]) * massAll[j] / distancePow2(new_posAll[i], new_posAll[j]);
+                        a += VEC.Normalize(new_posAll[j] - new_posAll[i]) * massAll[j] / DistancePow2(new_posAll[i], new_posAll[j]);
                     }
                 }
                 F[i] = G * a - (new_velAll[i] - velAll[i]) / h;
@@ -714,12 +748,12 @@ public class starSystem
                                 if (a == b)
                                 {
                                     tmp[a][b] = massAll[j] * G *
-                                        (-3 * Math.Pow(distancePow2(new_posAll[j], new_posAll[i]), -2.5) * (new_posAll[j][a] - new_posAll[i][a]) * new_posAll[j][a]
-                                        + Math.Pow(distancePow2(new_posAll[j], new_posAll[i]), -1.5));
+                                        (-3 * Math.Pow(DistancePow2(new_posAll[j], new_posAll[i]), -2.5) * (new_posAll[j][a] - new_posAll[i][a]) * new_posAll[j][a]
+                                        + Math.Pow(DistancePow2(new_posAll[j], new_posAll[i]), -1.5));
                                 }
                                 else
                                 {
-                                    tmp[a][b] = massAll[j] * G * -3 * Math.Pow(distancePow2(new_posAll[j], new_posAll[i]), -2.5) * (new_posAll[j][a] - new_posAll[i][a]) * (new_posAll[j][b] - new_posAll[i][b]);
+                                    tmp[a][b] = massAll[j] * G * -3 * Math.Pow(DistancePow2(new_posAll[j], new_posAll[i]), -2.5) * (new_posAll[j][a] - new_posAll[i][a]) * (new_posAll[j][b] - new_posAll[i][b]);
                                 }
                             }
                         }
@@ -738,8 +772,8 @@ public class starSystem
                                         if (k != j)
                                         {
                                             sInTmp += massAll[k] *
-                                                (3 * Math.Pow(distancePow2(new_posAll[k], new_posAll[j]), -2.5) * (new_posAll[k][a] - new_posAll[j][a]) * (new_posAll[k][a] - new_posAll[i][a])
-                                                - Math.Pow(distancePow2(new_posAll[k], new_posAll[j]), -1.5));
+                                                (3 * Math.Pow(DistancePow2(new_posAll[k], new_posAll[j]), -2.5) * (new_posAll[k][a] - new_posAll[j][a]) * (new_posAll[k][a] - new_posAll[i][a])
+                                                - Math.Pow(DistancePow2(new_posAll[k], new_posAll[j]), -1.5));
                                         }
                                     }
                                     tmp[a][a] = G * sInTmp;
@@ -752,7 +786,7 @@ public class starSystem
                                         if (k != j)
                                         {
                                             sInTmp += massAll[k] *
-                                                (3 * Math.Pow(distancePow2(new_posAll[k], new_posAll[j]), -2.5) * (new_posAll[k][a] - new_posAll[j][a]) * (new_posAll[k][b] * new_posAll[i][b]));
+                                                (3 * Math.Pow(DistancePow2(new_posAll[k], new_posAll[j]), -2.5) * (new_posAll[k][a] - new_posAll[j][a]) * (new_posAll[k][b] * new_posAll[i][b]));
                                         }
                                     }
                                     tmp[a][a] = G * sInTmp;
@@ -825,7 +859,7 @@ public class starSystem
         {
             for (int j = i + 1; j < validCount; j++)
             {
-                if (distanceBetweenStarsPow2(s[validIndex[i]], s[validIndex[j]]) < minDistanceToDistroy)
+                if (DistanceBetweenStarsPow2(s[validIndex[i]], s[validIndex[j]]) < minDistanceToDistroy)
                 {
                     s[validIndex[j]].pos += (s[validIndex[i]].pos - s[validIndex[j]].pos) * s[validIndex[i]].mass / (s[validIndex[j]].mass + s[validIndex[i]].mass);
                     s[validIndex[j]].vel = (s[validIndex[j]].vel * s[validIndex[j]].mass + s[validIndex[i]].vel * s[validIndex[i]].mass) / (s[validIndex[j]].mass + s[validIndex[i]].mass);
@@ -837,6 +871,9 @@ public class starSystem
         }
     }
 
+    /*
+     * Simplest way to update the system but have the most error
+     */
     public void UpdateForwardMethod(double h)
     {
         int[] validIndex = new int[validCount];
@@ -865,7 +902,7 @@ public class starSystem
             {
                 if (j != i)
                 {
-                    updateV += VEC.Normalize(s[validIndex[j]].pos - s[validIndex[i]].pos) * s[validIndex[j]].mass / distanceBetweenStarsPow2(s[validIndex[i]], s[validIndex[j]]);
+                    updateV += VEC.Normalize(s[validIndex[j]].pos - s[validIndex[i]].pos) * s[validIndex[j]].mass / DistanceBetweenStarsPow2(s[validIndex[i]], s[validIndex[j]]);
                 }
             }
             newvels[i] = s[validIndex[i]].vel + h * G * updateV;
@@ -885,7 +922,7 @@ public class starSystem
         {
             for(int j = i + 1; j < validCount; j++)
             {
-                if (distanceBetweenStarsPow2(s[validIndex[i]], s[validIndex[j]]) < minDistanceToDistroy)
+                if (DistanceBetweenStarsPow2(s[validIndex[i]], s[validIndex[j]]) < minDistanceToDistroy)
                 {
                     s[validIndex[j]].pos += (s[validIndex[i]].pos - s[validIndex[j]].pos) * s[validIndex[i]].mass / (s[validIndex[j]].mass + s[validIndex[i]].mass);
                     s[validIndex[j]].vel = (s[validIndex[j]].vel * s[validIndex[j]].mass + s[validIndex[i]].vel * s[validIndex[i]].mass) / (s[validIndex[j]].mass + s[validIndex[i]].mass);
@@ -897,7 +934,10 @@ public class starSystem
         }
     }
 
-    private double distanceBetweenStarsPow2(Star a, Star b)
+    /*
+     * Return distance pow 2 of two input Star objects
+     */
+    private double DistanceBetweenStarsPow2(Star a, Star b)
     {
         double dist = 0;
         for(int i = 0; i < 3; i++)
@@ -907,7 +947,10 @@ public class starSystem
         return dist;
     }
 
-    private double distancePow2(VEC a, VEC b)
+    /*
+     * Return distance pow 2 between two input vectors
+     */
+    private double DistancePow2(VEC a, VEC b)
     {
         double dist = 0;
         for (int i = 0; i < 3; i++)
@@ -917,7 +960,10 @@ public class starSystem
         return dist;
     }
 
-    private double distanceBetweenStars(Star a, Star b)
+    /*
+     * Return distance of two input Star objects
+     */
+    private double DistanceBetweenStars(Star a, Star b)
     {
         double dist = 0;
         for (int i = 0; i < 3; i++)
@@ -927,7 +973,10 @@ public class starSystem
         return Math.Sqrt(dist);
     }
 
-    private double distance(VEC a, VEC b)
+    /*
+     * Return distance between two input vectors
+     */
+    private double Distance(VEC a, VEC b)
     {
         double dist = 0;
         for (int i = 0; i < 3; i++)
@@ -942,6 +991,9 @@ public class starSystem
         return 0.0;
     }
 
+    /*
+     * Return vector of coefficients of Gear's Method with certain order number
+     */
     private VEC GETAlphaOfGearsMethod(int order)
     {
         MAT A = new MAT(order + 1);

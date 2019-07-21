@@ -302,7 +302,6 @@ public class MAT
 
 class numericalFunctions
 {
-
     public static MAT luFact(MAT m1)
     {
         int n = m1.dim();

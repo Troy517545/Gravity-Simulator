@@ -26,7 +26,6 @@ public class starObject : MonoBehaviour
         
     }
 
-    // Start is called before the first frame update
     void Start()
     {
         starSystemScript = GameObject.Find("starSystemObject").GetComponent<starSystemObject>();
@@ -49,15 +48,16 @@ public class starObject : MonoBehaviour
         selectedToDisplayInfo = false;
     }
 
-    // Update is called once per frame
     void Update()
     {
         if(s.valid == -1)
         {
+            // Destroy star and its orbit track 
             Destroy(gameObject);
         }
         else if (s.valid == 0)
         {
+            // Destroy star but keep its orbit track
             var track = Instantiate(trackObjectPrefab);
             LineRenderer trackLineRenderer = track.GetComponent<LineRenderer>();
             trackLineRenderer.widthMultiplier = 0.1f;
@@ -81,6 +81,7 @@ public class starObject : MonoBehaviour
         }
         else
         {
+            // Update star position and LineRenderer
             Vector3 posVec3 = new Vector3((float)s.pos[0], (float)s.pos[1], (float)s.pos[2]);
             if (transform.position != posVec3)
             {
@@ -133,11 +134,12 @@ public class starObject : MonoBehaviour
                 GameObject[] allStarObjects = GameObject.FindGameObjectsWithTag("starObject");
                 foreach (GameObject element in allStarObjects)
                 {
-                    if(element != gameObject) // select all other star objects
+                    if(element != gameObject) // Loop through all other star objects
                     {
                         if(element.GetComponent<starObject>().selectedToDisplayInfo == true)
                         {
-                            element.GetComponent<starObject>().selectedToDisplayInfo = false; // should only allow one star's info to be displayed 
+                            element.GetComponent<starObject>().selectedToDisplayInfo = false; // Should only allow one star's info to be displayed. 
+                                                                                              // So set all other selectedToDisplayInfo to be false.
                         }
                     }
                 }
@@ -145,6 +147,9 @@ public class starObject : MonoBehaviour
         }
     }
 
+    /*
+    * Return distance between two input vectors
+    */
     private double Distance(VEC a, VEC b)
     {
         double dist = 0;

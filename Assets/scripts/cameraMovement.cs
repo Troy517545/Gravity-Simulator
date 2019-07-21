@@ -143,7 +143,6 @@ public class cameraMovement : MonoBehaviour
                 nowWalkSpeed = normalWalkSpeed;
             }
 #endif
-
             if (Input.GetKeyDown("c"))
             {
                 slowWalkCondition = (slowWalkCondition == true) ? false : true;

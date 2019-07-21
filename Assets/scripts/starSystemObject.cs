@@ -9,7 +9,7 @@ public class starSystemObject : MonoBehaviour
     GUILayoutObject GUIObjectScript;
     cameraMovement cameraMovementScript;
 
-    starSystem system = new starSystem();
+    starSystem system;
     
     public bool systemRunning = true;
 
@@ -18,6 +18,7 @@ public class starSystemObject : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        system = new starSystem();
         GUIObjectScript = GameObject.Find("GUIObject").GetComponent<GUILayoutObject>();
         cameraMovementScript = GameObject.Find("Main Camera").GetComponent<cameraMovement>();
         UpdateSystem();
@@ -37,8 +38,8 @@ public class starSystemObject : MonoBehaviour
     }
 
     /*
-     * validCondition = 0: keep track
-     * validCondition = -1: clear track as well
+     * validCondition = 0: keep orbit track
+     * validCondition = -1: clear orbit track as well
      */
     public void ClearAllStars(int validCondition)
     {
